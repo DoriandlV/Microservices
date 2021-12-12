@@ -1,7 +1,6 @@
 package com.microservices.supplier.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.protocol.Message;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SupplierController {
 
     int counter;
+    boolean willCommit = false;
 
     @GetMapping("")
     public int countRequest( ) {
@@ -25,7 +25,19 @@ public class SupplierController {
     }
     @KafkaListener(topics = "supplier", groupId = "supplier")
     public void kafkaListener(@Payload String message){
-        log.info("kafkaListener"+message);
+        log.info("kafkaListener" + message);
+
+        if (willCommit)
+        throw new IllegalStateException();
+
+    }
+    @GetMapping("/changeCommit")
+    public void changeCommit() {
+        //gonna change the result true --> false  or false --> true
+        willCommit= !willCommit;
+
+
+        log.info("inside changeCommit SupplierController");
     }
 
 }

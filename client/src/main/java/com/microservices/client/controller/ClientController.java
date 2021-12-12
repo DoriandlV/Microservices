@@ -29,7 +29,7 @@ public class ClientController {
     @GetMapping("/feign")
     public int getCounter(){
 
-        log.info("inside countRequest method of SupplierController");
+        log.info("inside countRequest method of ClientController");
         return supplierFeign.getCounter();
 
     }
@@ -45,6 +45,7 @@ public class ClientController {
     @GetMapping("/kafka")
     public void kafka() {
         kafkaTemplate.send("supplier",UUID.randomUUID().toString(),"Hello World!");
+        log.info("inside Kafka Client Controller");
     }
 }
 
